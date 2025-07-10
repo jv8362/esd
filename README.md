@@ -1,328 +1,70 @@
-# ESD Wrist Strap Detection System
+# Getting Started with Create React App
 
-A real-time Electronic Static Discharge (ESD) wrist strap detection system using Raspberry Pi with IR and touch sensors, connected to a Node.js backend via WebSocket.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Features
+## Available Scripts
 
-- **IR Sensor Detection**: Detects if an operator is present at the workstation
-- **Touch Sensor Detection**: Detects if the operator is wearing the wrist strap
-- **Grounding Detection**: Verifies if the wrist strap is properly grounded
-- **Real-time Monitoring**: WebSocket communication for instant status updates
-- **Safety Alerts**: Automatic detection and logging of safety violations
-- **REST API**: HTTP endpoints for status monitoring and data retrieval
-- **Event Logging**: Comprehensive logging of all ESD events and status changes
+In the project directory, you can run:
 
-## System Architecture
+### `npm start`
 
-```
-Raspberry Pi (Sensors) ←→ WebSocket ←→ Node.js Backend ←→ WebSocket ←→ Frontend/Client
-```
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Hardware Components
-- **IR Sensor**: Detects operator presence
-- **Touch Sensor**: Detects wrist strap connection
-- **Grounding Circuit**: Verifies proper grounding connection
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-## Installation
+### `npm test`
 
-### Backend Setup
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-1. **Install Dependencies**:
-   ```bash
-   cd esd_backend
-   npm install
-   ```
+### `npm run build`
 
-2. **Start the Server**:
-   ```bash
-   # Development mode with auto-restart
-   npm run dev
-   
-   # Production mode
-   npm start
-   ```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-3. **Verify Installation**:
-   - Server runs on `http://localhost:3000`
-   - WebSocket endpoint: `ws://localhost:3000/ws`
-   - API endpoint: `http://localhost:3000/api`
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### Raspberry Pi Setup
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-1. **Install Python Dependencies**:
-   ```bash
-   pip install websockets asyncio
-   ```
+### `npm run eject`
 
-2. **Configure GPIO Pins** (in `raspberry_pi_client.py`):
-   ```python
-   # Replace mock implementations with actual GPIO readings
-   import RPi.GPIO as GPIO
-   
-   # Define your GPIO pins
-   IR_SENSOR_PIN = 17
-   TOUCH_SENSOR_PIN = 18
-   GROUND_PIN = 19
-   
-   # Initialize GPIO
-   GPIO.setmode(GPIO.BCM)
-   GPIO.setup(IR_SENSOR_PIN, GPIO.IN)
-   GPIO.setup(TOUCH_SENSOR_PIN, GPIO.IN)
-   GPIO.setup(GROUND_PIN, GPIO.IN)
-   ```
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-3. **Run the Client**:
-   ```bash
-   python3 raspberry_pi_client.py
-   ```
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-## API Documentation
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-### REST Endpoints
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-#### Get ESD Status
-```http
-GET /api/esd/status
-```
-Returns complete ESD system status including sensor readings and safety status.
+## Learn More
 
-**Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "status": {
-      "operatorPresent": true,
-      "wristStrapConnected": true,
-      "properlyGrounded": true,
-      "lastUpdate": "2024-01-15T10:30:00.000Z",
-      "alerts": []
-    },
-    "safetyStatus": "SAFE",
-    "timestamp": "2024-01-15T10:30:00.000Z"
-  }
-}
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-#### Get Safety Status
-```http
-GET /api/esd/safety
-```
-Returns simplified safety status for quick monitoring.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-**Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "safetyStatus": "SAFE",
-    "isSafe": true,
-    "operatorPresent": true,
-    "wristStrapConnected": true,
-    "properlyGrounded": true,
-    "timestamp": "2024-01-15T10:30:00.000Z"
-  }
-}
-```
+### Code Splitting
 
-#### Get Alerts
-```http
-GET /api/esd/alerts
-```
-Returns recent ESD events and safety violations.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-**Response**:
-```json
-{
-  "success": true,
-  "data": {
-    "alerts": [
-      {
-        "type": "SAFETY_VIOLATION",
-        "details": {
-          "safetyStatus": "WRIST_STRAP_NOT_CONNECTED",
-          "operatorPresent": true,
-          "wristStrapConnected": false,
-          "properlyGrounded": false
-        },
-        "timestamp": "2024-01-15T10:25:00.000Z"
-      }
-    ],
-    "alertCount": 1,
-    "timestamp": "2024-01-15T10:30:00.000Z"
-  }
-}
-```
+### Analyzing the Bundle Size
 
-#### Health Check
-```http
-GET /api/health
-```
-Returns system health and uptime information.
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### WebSocket Communication
+### Making a Progressive Web App
 
-#### Connecting to WebSocket
-```javascript
-const ws = new WebSocket('ws://localhost:3000/ws');
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-#### Message Types
+### Advanced Configuration
 
-**From Raspberry Pi to Server**:
-```json
-{
-  "type": "esd_sensor_data",
-  "irSensor": 1,        // 0 = no operator, 1 = operator detected
-  "touchSensor": 1,     // 0 = not connected, 1 = connected
-  "groundStatus": 1,    // 0 = not grounded, 1 = properly grounded
-  "timestamp": "2024-01-15T10:30:00.000Z"
-}
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-**From Server to Clients**:
-```json
-{
-  "type": "esd_status_update",
-  "status": {
-    "operatorPresent": true,
-    "wristStrapConnected": true,
-    "properlyGrounded": true,
-    "lastUpdate": "2024-01-15T10:30:00.000Z",
-    "alerts": []
-  },
-  "safetyStatus": "SAFE",
-  "timestamp": "2024-01-15T10:30:00.000Z"
-}
-```
+### Deployment
 
-## Safety Status Codes
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-- `SAFE`: All conditions met - operator present, wrist strap connected, properly grounded
-- `NO_OPERATOR`: No operator detected at workstation
-- `WRIST_STRAP_NOT_CONNECTED`: Operator present but wrist strap not connected
-- `NOT_PROPERLY_GROUNDED`: Wrist strap connected but not properly grounded
+### `npm run build` fails to minify
 
-## Event Types
-
-- `OPERATOR_STATUS_CHANGE`: IR sensor detected operator presence/absence
-- `WRIST_STRAP_STATUS_CHANGE`: Touch sensor detected wrist strap connection/disconnection
-- `GROUNDING_STATUS_CHANGE`: Grounding status changed
-- `SAFETY_VIOLATION`: Safety requirements not met
-
-## Configuration
-
-### Environment Variables
-Create a `.env` file in the `esd_backend` directory:
-
-```env
-PORT=3000
-NODE_ENV=development
-WS_PATH=/ws
-PING_INTERVAL=30000
-PING_TIMEOUT=60000
-```
-
-### Raspberry Pi Configuration
-Update `raspberry_pi_client.py`:
-
-```python
-# Server configuration
-SERVER_URL = "ws://your-server-ip:3000/ws"
-SEND_INTERVAL = 1.0  # Data transmission frequency
-
-# GPIO pin configuration
-IR_SENSOR_PIN = 17
-TOUCH_SENSOR_PIN = 18
-GROUND_PIN = 19
-```
-
-## Testing
-
-### Test the Backend
-```bash
-# Start the server
-npm run dev
-
-# Test API endpoints
-curl http://localhost:3000/api/esd/status
-curl http://localhost:3000/api/esd/safety
-curl http://localhost:3000/api/health
-```
-
-### Test WebSocket Communication
-```bash
-# Run the Python client (simulates sensor data)
-python3 raspberry_pi_client.py
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **WebSocket Connection Failed**:
-   - Check if server is running on correct port
-   - Verify firewall settings
-   - Check network connectivity
-
-2. **Sensor Data Not Updating**:
-   - Verify GPIO pin configuration
-   - Check sensor connections
-   - Review Python client logs
-
-3. **Safety Violations Not Detected**:
-   - Verify sensor logic in backend
-   - Check WebSocket message format
-   - Review event logging
-
-### Logs
-- Backend logs: Console output when running `npm run dev`
-- Python client logs: Console output when running the client
-- WebSocket events: Logged in backend console
-
-## Security Considerations
-
-- Use HTTPS/WSS in production
-- Implement authentication for API endpoints
-- Secure WebSocket connections
-- Validate all incoming sensor data
-- Log security events
-
-## Production Deployment
-
-1. **Environment Setup**:
-   ```bash
-   NODE_ENV=production
-   PORT=3000
-   ```
-
-2. **Process Management**:
-   ```bash
-   # Using PM2
-   npm install -g pm2
-   pm2 start server.js --name "esd-backend"
-   ```
-
-3. **Reverse Proxy** (Nginx example):
-   ```nginx
-   location / {
-       proxy_pass http://localhost:3000;
-       proxy_http_version 1.1;
-       proxy_set_header Upgrade $http_upgrade;
-       proxy_set_header Connection 'upgrade';
-       proxy_set_header Host $host;
-       proxy_cache_bypass $http_upgrade;
-   }
-   ```
-
-## License
-
-ISC License
-
-## Support
-
-For issues and questions:
-1. Check the troubleshooting section
-2. Review logs for error messages
-3. Verify hardware connections
-4. Test individual components 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
